@@ -348,7 +348,7 @@ function FinalVerdict({ text, isLoading, t }) {
               <span style={{ color: t.vc, fontWeight: 700, fontSize: 13, fontFamily: "'DM Mono',monospace" }}>Council of AI</span>
               <span style={{ color: t.vBadge, fontSize: 9, fontFamily: "'DM Mono',monospace", background: t.vDim, border: `1px solid ${t.vBorder}`, padding: "2px 7px", borderRadius: 4 }}>Consensus Answer</span>
             </div>
-            <div style={{ color: t.vText, fontSize: 15, lineHeight: 1.85, fontFamily: "'Playfair Display',Georgia,serif", fontWeight: 700 }}>
+            <div style={{ color: t.vc, fontSize: 15.5, lineHeight: 1.9, fontFamily: "'Lora',Georgia,serif", fontWeight: 400, letterSpacing: 0.1 }}>
               {isLoading ? <PulsingDots color={t.vc} /> : text}
             </div>
           </div>
