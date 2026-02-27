@@ -9,10 +9,10 @@ const AI_PERSONAS = [
     name: "ChatGPT",
     model: "GPT-4o",
     apiRoute: "/api/chatgpt",
-    color: "#00c896",
-    colorDim: "rgba(0,200,150,0.15)",
-    colorBorder: "rgba(0,200,150,0.25)",
-    colorGlow: "rgba(0,200,150,0.5)",
+    color: "#059669",
+    colorDim: "rgba(5,150,105,0.08)",
+    colorBorder: "rgba(5,150,105,0.2)",
+    colorGlow: "rgba(5,150,105,0.15)",
     initial: "G",
     blindPrompt: `You are ChatGPT (GPT-4o) by OpenAI. Answer the following question independently and thoroughly. Give your best factual answer. Be confident and clear. 3-5 sentences.`,
     debatePrompt: `You are ChatGPT (GPT-4o) by OpenAI in a live factual debate with Gemini and Claude. You have seen everyone's answers including previous debate rounds. Critically evaluate what was said — name names, point out where another AI was wrong or incomplete, defend your own previous points if challenged, and add new arguments. Be direct, factual, specific. Reference others by name (e.g. "Gemini was right about X but missed Y", "Claude's point on Z is incorrect because..."). 3-5 sentences. No fluff.`,
@@ -22,10 +22,10 @@ const AI_PERSONAS = [
     name: "Gemini",
     model: "Gemini 1.5 Pro",
     apiRoute: "/api/gemini",
-    color: "#4d9eff",
-    colorDim: "rgba(77,158,255,0.15)",
-    colorBorder: "rgba(77,158,255,0.25)",
-    colorGlow: "rgba(77,158,255,0.5)",
+    color: "#2563eb",
+    colorDim: "rgba(37,99,235,0.08)",
+    colorBorder: "rgba(37,99,235,0.2)",
+    colorGlow: "rgba(37,99,235,0.15)",
     initial: "◈",
     blindPrompt: `You are Gemini (1.5 Pro) by Google. Answer the following question independently and thoroughly. Give your best factual answer. Be confident and clear. 3-5 sentences.`,
     debatePrompt: `You are Gemini (1.5 Pro) by Google in a live factual debate with ChatGPT and Claude. You have seen everyone's answers including previous debate rounds. Critically evaluate what was said — name names, point out where another AI was wrong or incomplete, defend your own previous points if challenged, and add new arguments. Be direct, factual, specific. Reference others by name. 3-5 sentences. No fluff.`,
@@ -35,10 +35,10 @@ const AI_PERSONAS = [
     name: "Claude",
     model: "Claude Opus 4",
     apiRoute: "/api/claude",
-    color: "#ff8c5a",
-    colorDim: "rgba(255,140,90,0.15)",
-    colorBorder: "rgba(255,140,90,0.25)",
-    colorGlow: "rgba(255,140,90,0.5)",
+    color: "#c2570a",
+    colorDim: "rgba(194,87,10,0.08)",
+    colorBorder: "rgba(194,87,10,0.2)",
+    colorGlow: "rgba(194,87,10,0.15)",
     initial: "◆",
     blindPrompt: `You are Claude (Opus 4) by Anthropic. Answer the following question independently and thoroughly. Give your best factual answer. Be confident and clear. 3-5 sentences.`,
     debatePrompt: `You are Claude (Opus 4) by Anthropic in a live factual debate with ChatGPT and Gemini. You have seen everyone's answers including previous debate rounds. Critically evaluate what was said — name names, point out where another AI was wrong or incomplete, defend your own previous points if challenged, and add new arguments. Be direct, factual, specific. Reference others by name. 3-5 sentences. No fluff.`,
@@ -115,21 +115,21 @@ function AIBadge({ persona, isActive, isDone }) {
     <div style={{
       display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
       padding: "6px 10px", flex: 1,
-      background: isActive ? persona.colorDim : "rgba(255,255,255,0.02)",
-      border: `1px solid ${isActive ? persona.colorBorder : "rgba(255,255,255,0.05)"}`,
+      background: isActive ? persona.colorDim : "rgba(0,0,0,0.02)",
+      border: `1px solid ${isActive ? persona.colorBorder : "rgba(0,0,0,0.06)"}`,
       borderRadius: 10,
       transition: "all 0.4s cubic-bezier(0.34,1.56,0.64,1)",
       transform: isActive ? "translateY(-2px)" : "none",
-      boxShadow: isActive ? `0 6px 24px ${persona.colorGlow}` : "none",
+      boxShadow: isActive ? `0 4px 16px ${persona.colorGlow}` : "none",
     }}>
       <div style={{
         width: 28, height: 28, borderRadius: "50%",
-        background: isActive ? persona.colorDim : "rgba(255,255,255,0.03)",
-        border: `1.5px solid ${isActive ? persona.color : "rgba(255,255,255,0.08)"}`,
+        background: isActive ? persona.colorDim : "rgba(0,0,0,0.03)",
+        border: `1.5px solid ${isActive ? persona.color : "rgba(0,0,0,0.08)"}`,
         display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: 11, color: isActive ? persona.color : isDone ? persona.color : "#3a3a3a",
+        fontSize: 11, color: isActive ? persona.color : isDone ? persona.color : "#b5b0a8",
         fontWeight: 700, transition: "all 0.4s",
-        boxShadow: isActive ? `0 0 16px ${persona.colorGlow}` : "none",
+        boxShadow: isActive ? `0 0 12px ${persona.colorGlow}` : "none",
         animation: isActive ? "badgePulse 1.8s ease infinite" : "none",
       }}>
         {persona.initial}
@@ -137,10 +137,10 @@ function AIBadge({ persona, isActive, isDone }) {
       <div style={{ textAlign: "center" }}>
         <div style={{
           fontFamily: "'DM Mono',monospace", fontSize: 9, fontWeight: 600,
-          color: isActive ? persona.color : isDone ? "#555" : "#333",
+          color: isActive ? persona.color : isDone ? "#7a7570" : "#b5b0a8",
           letterSpacing: 0.5, transition: "color 0.4s",
         }}>{persona.name}</div>
-        <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 7, color: "#2a2a2a", marginTop: 1 }}>{persona.model}</div>
+        <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 7, color: "#c5c0b8", marginTop: 1 }}>{persona.model}</div>
       </div>
       {isActive && <PulsingDots color={persona.color} />}
     </div>
@@ -151,20 +151,20 @@ function RoundDivider({ round }) {
   const isBlind = round === 1;
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 14, margin: "32px 0 24px", animation: "fadeIn 0.4s ease-out" }}>
-      <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.06))" }} />
+      <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.06))" }} />
       <div style={{
         display: "flex", alignItems: "center", gap: 8,
         padding: "5px 14px",
-        background: isBlind ? "rgba(255,255,255,0.03)" : "rgba(255,200,100,0.05)",
-        border: `1px solid ${isBlind ? "rgba(255,255,255,0.07)" : "rgba(255,200,100,0.15)"}`,
+        background: isBlind ? "rgba(0,0,0,0.03)" : "rgba(180,140,50,0.06)",
+        border: `1px solid ${isBlind ? "rgba(0,0,0,0.06)" : "rgba(180,140,50,0.15)"}`,
         borderRadius: 20,
       }}>
-        <span style={{ fontSize: 8, color: isBlind ? "#555" : "#a08020" }}>{isBlind ? "○" : "◉"}</span>
-        <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 9, letterSpacing: 2, color: isBlind ? "#444" : "#a08020", whiteSpace: "nowrap" }}>
+        <span style={{ fontSize: 8, color: isBlind ? "#9a9488" : "#9a7a20" }}>{isBlind ? "○" : "◉"}</span>
+        <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 9, letterSpacing: 2, color: isBlind ? "#9a9488" : "#9a7a20", whiteSpace: "nowrap" }}>
           {isBlind ? "INDEPENDENT ANSWERS" : `DEBATE ROUND ${round - 1}`}
         </span>
       </div>
-      <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, rgba(255,255,255,0.06), transparent)" }} />
+      <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, rgba(0,0,0,0.06), transparent)" }} />
     </div>
   );
 }
@@ -173,17 +173,17 @@ function UserBubble({ text }) {
   return (
     <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 32, animation: "slideFromRight 0.4s cubic-bezier(0.34,1.2,0.64,1)" }}>
       <div style={{ maxWidth: "72%", minWidth: 120 }}>
-        <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 9, color: "#333", textAlign: "right", marginBottom: 6, letterSpacing: 1.5 }}>
+        <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 9, color: "#9a9488", textAlign: "right", marginBottom: 6, letterSpacing: 1.5 }}>
           YOU ASKED
         </div>
         <div style={{
-          background: "linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.04))",
-          border: "1px solid rgba(255,255,255,0.1)",
+          background: "linear-gradient(135deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02))",
+          border: "1px solid rgba(0,0,0,0.08)",
           borderRadius: "16px 3px 16px 16px",
           padding: "14px 18px",
-          color: "#e8e8e8", fontSize: 15.5, lineHeight: 1.65,
+          color: "#3d3929", fontSize: 15.5, lineHeight: 1.65,
           fontFamily: "'Playfair Display',Georgia,serif",
-          boxShadow: "0 4px 24px rgba(0,0,0,0.3)",
+          boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
         }}>{text}</div>
       </div>
     </div>
@@ -202,13 +202,13 @@ function AIMessage({ msg, persona, delay = 0 }) {
       <div style={{ flex: 1 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
           <span style={{ color: persona.color, fontWeight: 700, fontSize: 12, fontFamily: "'DM Mono',monospace", letterSpacing: 0.5 }}>{persona.name}</span>
-          <span style={{ fontSize: 9, color: "#2e2e2e", fontFamily: "'DM Mono',monospace", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", padding: "2px 6px", borderRadius: 4 }}>{persona.model}</span>
+          <span style={{ fontSize: 9, color: "#9a9488", fontFamily: "'DM Mono',monospace", background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)", padding: "2px 6px", borderRadius: 4 }}>{persona.model}</span>
         </div>
         <div style={{
-          background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.06)",
+          background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.05)",
           borderLeft: `2px solid ${persona.colorBorder}`,
           borderRadius: "0 12px 12px 12px", padding: "12px 16px",
-          color: "#ccc", fontSize: 14, lineHeight: 1.75, fontFamily: "'Lora',Georgia,serif",
+          color: "#4a4540", fontSize: 14, lineHeight: 1.75, fontFamily: "'Lora',Georgia,serif",
         }}>{msg.text}</div>
       </div>
     </div>
@@ -223,14 +223,14 @@ function TypingMessage({ persona }) {
         background: persona.colorDim, border: `1.5px solid ${persona.color}`,
         display: "flex", alignItems: "center", justifyContent: "center",
         fontSize: 13, color: persona.color, fontWeight: 700,
-        animation: "badgePulse 1.8s ease infinite", boxShadow: `0 0 20px ${persona.colorGlow}`,
+        animation: "badgePulse 1.8s ease infinite", boxShadow: `0 0 12px ${persona.colorGlow}`,
       }}>{persona.initial}</div>
       <div style={{ flex: 1 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
           <span style={{ color: persona.color, fontWeight: 700, fontSize: 12, fontFamily: "'DM Mono',monospace" }}>{persona.name}</span>
-          <span style={{ color: "#333", fontSize: 10, fontFamily: "'DM Mono',monospace" }}>thinking...</span>
+          <span style={{ color: "#9a9488", fontSize: 10, fontFamily: "'DM Mono',monospace" }}>thinking...</span>
         </div>
-        <div style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.06)", borderLeft: `2px solid ${persona.colorBorder}`, borderRadius: "0 12px 12px 12px", padding: "14px 18px", display: "inline-block" }}>
+        <div style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.05)", borderLeft: `2px solid ${persona.colorBorder}`, borderRadius: "0 12px 12px 12px", padding: "14px 18px", display: "inline-block" }}>
           <PulsingDots color={persona.color} />
         </div>
       </div>
@@ -272,8 +272,8 @@ function DebateSection({ isOpen, onToggle, rounds, messages, typingAI, typingPer
           display: "flex", alignItems: "center", gap: 10,
           width: "100%",
           padding: "12px 16px",
-          background: isDebating ? "rgba(0,200,150,0.03)" : "rgba(255,255,255,0.02)",
-          border: `1px solid ${isDebating ? "rgba(0,200,150,0.12)" : "rgba(255,255,255,0.06)"}`,
+          background: isDebating ? "rgba(5,150,105,0.04)" : "rgba(0,0,0,0.02)",
+          border: `1px solid ${isDebating ? "rgba(5,150,105,0.15)" : "rgba(0,0,0,0.06)"}`,
           borderRadius: isOpen ? "12px 12px 0 0" : 12,
           cursor: "pointer",
           transition: "all 0.3s ease",
@@ -283,25 +283,25 @@ function DebateSection({ isOpen, onToggle, rounds, messages, typingAI, typingPer
         {isDebating ? (
           <div style={{
             width: 18, height: 18, borderRadius: "50%",
-            border: "2px solid rgba(0,200,150,0.2)",
-            borderTopColor: "#00c896",
+            border: "2px solid rgba(5,150,105,0.2)",
+            borderTopColor: "#059669",
             animation: "spin 0.8s linear infinite",
             flexShrink: 0,
           }} />
         ) : (
           <div style={{
             width: 18, height: 18, borderRadius: "50%",
-            background: "rgba(0,200,150,0.08)",
-            border: "1px solid rgba(0,200,150,0.25)",
+            background: "rgba(5,150,105,0.08)",
+            border: "1px solid rgba(5,150,105,0.2)",
             display: "flex", alignItems: "center", justifyContent: "center",
-            color: "#00c896", fontSize: 9, flexShrink: 0,
+            color: "#059669", fontSize: 9, flexShrink: 0,
           }}>✓</div>
         )}
 
         <span style={{
           fontFamily: "'DM Mono',monospace",
           fontSize: 11,
-          color: isDebating ? "#00c896" : "#555",
+          color: isDebating ? "#059669" : "#7a7570",
           letterSpacing: 0.5,
           flex: 1,
           textAlign: "left",
@@ -325,7 +325,7 @@ function DebateSection({ isOpen, onToggle, rounds, messages, typingAI, typingPer
         {/* Chevron */}
         <span style={{
           fontFamily: "'DM Mono',monospace", fontSize: 12,
-          color: "#444",
+          color: "#9a9488",
           transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
           transition: "transform 0.3s ease",
           display: "inline-block",
@@ -337,11 +337,11 @@ function DebateSection({ isOpen, onToggle, rounds, messages, typingAI, typingPer
       {/* Collapsible Content */}
       {isOpen && (
         <div style={{
-          border: "1px solid rgba(255,255,255,0.06)",
+          border: "1px solid rgba(0,0,0,0.06)",
           borderTop: "none",
           borderRadius: "0 0 12px 12px",
           padding: "4px 16px 16px",
-          background: "rgba(255,255,255,0.01)",
+          background: "rgba(0,0,0,0.015)",
           maxHeight: 600,
           overflowY: "auto",
           animation: "fadeIn 0.3s ease-out",
@@ -363,43 +363,43 @@ function DebateSection({ isOpen, onToggle, rounds, messages, typingAI, typingPer
 }
 
 function FinalVerdict({ text, isLoading }) {
-  const verdictColor = "#c9a84c";
-  const verdictColorDim = "rgba(201,168,76,0.1)";
-  const verdictColorBorder = "rgba(201,168,76,0.25)";
-  const verdictColorGlow = "rgba(201,168,76,0.3)";
+  const verdictColor = "#9a7a20";
+  const verdictColorDim = "rgba(154,122,32,0.08)";
+  const verdictColorBorder = "rgba(154,122,32,0.2)";
+  const verdictColorGlow = "rgba(154,122,32,0.15)";
 
   return (
     <div style={{ animation: "fadeIn 0.6s ease-out", marginTop: 24, marginBottom: 16 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 0, marginBottom: 24 }}>
         <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${verdictColorBorder})` }} />
-        <div style={{ padding: "8px 20px", background: `linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.06))`, border: `1px solid ${verdictColorBorder}`, display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 6, height: 6, borderRadius: "50%", background: verdictColor, boxShadow: `0 0 10px ${verdictColorGlow}`, animation: isLoading ? "badgePulse 1s ease infinite" : "none" }} />
+        <div style={{ padding: "8px 20px", background: `linear-gradient(135deg, rgba(154,122,32,0.08), rgba(154,122,32,0.04))`, border: `1px solid ${verdictColorBorder}`, display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: verdictColor, boxShadow: `0 0 8px ${verdictColorGlow}`, animation: isLoading ? "badgePulse 1s ease infinite" : "none" }} />
           <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 10, letterSpacing: 2.5, color: verdictColor, fontWeight: 600 }}>COUNCIL OF AI — FINAL ANSWER</span>
         </div>
         <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, ${verdictColorBorder}, transparent)` }} />
       </div>
       <div style={{
         position: "relative", overflow: "hidden",
-        background: `linear-gradient(145deg, rgba(201,168,76,0.08) 0%, rgba(201,168,76,0.03) 100%)`,
+        background: `linear-gradient(145deg, rgba(154,122,32,0.06) 0%, rgba(154,122,32,0.02) 100%)`,
         border: `1px solid ${verdictColorBorder}`, borderRadius: 16, padding: "24px 28px",
-        boxShadow: `0 0 60px rgba(201,168,76,0.08), inset 0 1px 0 rgba(255,255,255,0.05)`,
+        boxShadow: `0 2px 24px rgba(154,122,32,0.06)`,
       }}>
-        <div style={{ position: "absolute", top: 0, right: 0, width: 80, height: 80, background: `radial-gradient(circle at top right, rgba(201,168,76,0.15), transparent 70%)`, pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: 0, right: 0, width: 80, height: 80, background: `radial-gradient(circle at top right, rgba(154,122,32,0.1), transparent 70%)`, pointerEvents: "none" }} />
         <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
           <div style={{
             width: 44, height: 44, borderRadius: "50%", flexShrink: 0,
             background: verdictColorDim, border: `2px solid ${isLoading ? verdictColor : verdictColorBorder}`,
             display: "flex", alignItems: "center", justifyContent: "center",
             fontSize: 18, color: verdictColor, fontWeight: 700,
-            boxShadow: `0 0 ${isLoading ? 24 : 12}px ${verdictColorGlow}`,
+            boxShadow: `0 0 ${isLoading ? 16 : 8}px ${verdictColorGlow}`,
             animation: isLoading ? "badgePulse 1.5s ease infinite" : "none",
           }}>⚖</div>
           <div style={{ flex: 1 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
               <span style={{ color: verdictColor, fontWeight: 700, fontSize: 13, fontFamily: "'DM Mono',monospace" }}>Council of AI</span>
-              <span style={{ color: "#5a4a20", fontSize: 9, fontFamily: "'DM Mono',monospace", background: "rgba(201,168,76,0.08)", border: "1px solid rgba(201,168,76,0.15)", padding: "2px 7px", borderRadius: 4 }}>Consensus Answer</span>
+              <span style={{ color: "#8a7a40", fontSize: 9, fontFamily: "'DM Mono',monospace", background: "rgba(154,122,32,0.06)", border: "1px solid rgba(154,122,32,0.12)", padding: "2px 7px", borderRadius: 4 }}>Consensus Answer</span>
             </div>
-            <div style={{ color: "#ede0c0", fontSize: 15, lineHeight: 1.85, fontFamily: "'Playfair Display',Georgia,serif", fontWeight: 700 }}>
+            <div style={{ color: "#3d3929", fontSize: 15, lineHeight: 1.85, fontFamily: "'Playfair Display',Georgia,serif", fontWeight: 700 }}>
               {isLoading ? <PulsingDots color={verdictColor} /> : text}
             </div>
           </div>
@@ -530,7 +530,7 @@ export default function AIDiscussionRoom() {
   const isGreeting = submitted && isSimpleGreeting(submitted);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#1a2233", color: "#e0e0e0", display: "flex", flexDirection: "column", fontFamily: "'Lora',Georgia,serif" }}>
+    <div style={{ minHeight: "100vh", background: "#F5F5F0", color: "#3d3929", display: "flex", flexDirection: "column", fontFamily: "'Lora',Georgia,serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap');
         @keyframes dotBounce { 0%,80%,100%{transform:translateY(0);opacity:0.9} 40%{transform:translateY(-6px);opacity:1} }
@@ -541,28 +541,28 @@ export default function AIDiscussionRoom() {
         @keyframes gradientShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
         @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
         * { box-sizing:border-box; margin:0; padding:0; }
-        ::-webkit-scrollbar{width:3px} ::-webkit-scrollbar-track{background:#1a2233} ::-webkit-scrollbar-thumb{background:#1e2530;border-radius:2px}
+        ::-webkit-scrollbar{width:3px} ::-webkit-scrollbar-track{background:#F5F5F0} ::-webkit-scrollbar-thumb{background:#d5d0c8;border-radius:2px}
         button{cursor:pointer;transition:all 0.25s;border:none;outline:none}
         textarea{outline:none;resize:none}
       `}</style>
 
       {/* Header */}
       <header style={{
-        padding: "10px 16px", borderBottom: "1px solid rgba(255,255,255,0.05)",
+        padding: "10px 16px", borderBottom: "1px solid rgba(0,0,0,0.06)",
         position: "sticky", top: 0, zIndex: 20,
-        background: "rgba(26,34,51,0.95)", backdropFilter: "blur(16px)",
+        background: "rgba(245,245,240,0.95)", backdropFilter: "blur(16px)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
           <div style={{
             width: 28, height: 28, borderRadius: 7, flexShrink: 0,
-            background: "linear-gradient(135deg, #00c896, #4d9eff, #ff8c5a)",
+            background: "linear-gradient(135deg, #059669, #2563eb, #c2570a)",
             backgroundSize: "200% 200%", animation: "gradientShift 4s ease infinite",
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 10, fontWeight: 700, color: "#1a2233",
+            fontSize: 10, fontWeight: 700, color: "#fff",
           }}>AI</div>
           <div style={{ flex: 1 }}>
-            <h1 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 15, fontWeight: 700, color: "#fff", letterSpacing: -0.3 }}>Discussion Room</h1>
-            <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 7, color: "#2e3a4a", letterSpacing: 2, marginTop: 1 }}>MULTI-AI DEBATE PROTOCOL</div>
+            <h1 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 15, fontWeight: 700, color: "#1a1a18", letterSpacing: -0.3 }}>Discussion Room</h1>
+            <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 7, color: "#b5b0a8", letterSpacing: 2, marginTop: 1 }}>MULTI-AI DEBATE PROTOCOL</div>
           </div>
         </div>
         <div style={{ display: "flex", gap: 4, justifyContent: "center" }}>
@@ -580,13 +580,13 @@ export default function AIDiscussionRoom() {
                   width: 50, height: 50, borderRadius: "50%",
                   background: p.colorDim, border: `1px solid ${p.colorBorder}`,
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 18, color: p.color, opacity: 0.4,
+                  fontSize: 18, color: p.color, opacity: 0.5,
                   animation: `fadeIn 0.6s ease-out ${i * 0.15}s both`,
                 }}>{p.initial}</div>
               ))}
             </div>
-            <p style={{ fontFamily: "'DM Mono',monospace", fontSize: 10, color: "#1e2a38", letterSpacing: 3, marginBottom: 8 }}>POSE A QUESTION TO BEGIN</p>
-            <p style={{ fontFamily: "'Lora',Georgia,serif", fontSize: 13, color: "#1e2a38", fontStyle: "italic" }}>
+            <p style={{ fontFamily: "'DM Mono',monospace", fontSize: 10, color: "#b5b0a8", letterSpacing: 3, marginBottom: 8 }}>POSE A QUESTION TO BEGIN</p>
+            <p style={{ fontFamily: "'Lora',Georgia,serif", fontSize: 13, color: "#9a9488", fontStyle: "italic" }}>
               Three AIs debate your question, then deliver a unified Council answer.
             </p>
           </div>
@@ -630,40 +630,40 @@ export default function AIDiscussionRoom() {
 
       {/* Footer */}
       <footer style={{
-        borderTop: "1px solid rgba(255,255,255,0.05)",
+        borderTop: "1px solid rgba(0,0,0,0.06)",
         padding: "12px 12px 16px",
-        background: "rgba(26,34,51,0.98)",
+        background: "rgba(245,245,240,0.98)",
         position: "sticky", bottom: 0, zIndex: 10,
       }}>
         <div style={{ maxWidth: 820, margin: "0 auto" }}>
           {status && (
-            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8, fontFamily: "'DM Mono',monospace", fontSize: 9, color: "#2a3a4a", letterSpacing: 1.5 }}>
-              <div style={{ width: 5, height: 5, borderRadius: "50%", background: isRunning ? "#00c896" : "#2a3a4a", boxShadow: isRunning ? "0 0 8px rgba(0,200,150,0.6)" : "none", animation: isRunning ? "badgePulse 1.2s ease infinite" : "none", flexShrink: 0 }} />
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8, fontFamily: "'DM Mono',monospace", fontSize: 9, color: "#9a9488", letterSpacing: 1.5 }}>
+              <div style={{ width: 5, height: 5, borderRadius: "50%", background: isRunning ? "#059669" : "#c5c0b8", boxShadow: isRunning ? "0 0 8px rgba(5,150,105,0.4)" : "none", animation: isRunning ? "badgePulse 1.2s ease infinite" : "none", flexShrink: 0 }} />
               {status}
             </div>
           )}
-          <div style={{ display: "flex", gap: 8, alignItems: "flex-end", background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 14, padding: "8px 8px 8px 14px" }}>
+          <div style={{ display: "flex", gap: 8, alignItems: "flex-end", background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.07)", borderRadius: 14, padding: "8px 8px 8px 14px" }}>
             <textarea
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               placeholder="Ask the panel a question..."
               disabled={isRunning}
               rows={1}
-              style={{ flex: 1, background: "transparent", border: "none", color: "#e8e8e8", fontSize: 14, fontFamily: "'Lora',Georgia,serif", lineHeight: 1.5, padding: 0, opacity: isRunning ? 0.4 : 1 }}
+              style={{ flex: 1, background: "transparent", border: "none", color: "#3d3929", fontSize: 14, fontFamily: "'Lora',Georgia,serif", lineHeight: 1.5, padding: 0, opacity: isRunning ? 0.4 : 1 }}
               onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey && !isRunning) { e.preventDefault(); runDiscussion(); } }}
             />
             <div style={{ display: "flex", gap: 6, alignItems: "center", flexShrink: 0 }}>
-              <button onClick={reset} style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)", color: "#2e3a4a", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center" }} title="Reset">↺</button>
+              <button onClick={reset} style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.06)", color: "#9a9488", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center" }} title="Reset">↺</button>
               {!isRunning ? (
-                <button onClick={runDiscussion} disabled={!question.trim()} style={{ height: 32, padding: "0 14px", background: question.trim() ? "linear-gradient(135deg, #00c896, #4d9eff, #ff8c5a)" : "rgba(255,255,255,0.04)", backgroundSize: "200% 200%", animation: question.trim() ? "gradientShift 3s ease infinite" : "none", border: question.trim() ? "none" : "1px solid rgba(255,255,255,0.05)", borderRadius: 8, color: question.trim() ? "#1a2233" : "#252f3a", fontFamily: "'DM Mono',monospace", fontSize: 10, fontWeight: 600, letterSpacing: 1.5, cursor: question.trim() ? "pointer" : "not-allowed", whiteSpace: "nowrap" }}>
+                <button onClick={runDiscussion} disabled={!question.trim()} style={{ height: 32, padding: "0 14px", background: question.trim() ? "linear-gradient(135deg, #059669, #2563eb, #c2570a)" : "rgba(0,0,0,0.04)", backgroundSize: "200% 200%", animation: question.trim() ? "gradientShift 3s ease infinite" : "none", border: question.trim() ? "none" : "1px solid rgba(0,0,0,0.06)", borderRadius: 8, color: question.trim() ? "#fff" : "#c5c0b8", fontFamily: "'DM Mono',monospace", fontSize: 10, fontWeight: 600, letterSpacing: 1.5, cursor: question.trim() ? "pointer" : "not-allowed", whiteSpace: "nowrap" }}>
                   DEBATE →
                 </button>
               ) : (
-                <button onClick={stop} style={{ height: 32, padding: "0 12px", background: "rgba(255,80,80,0.08)", border: "1px solid rgba(255,80,80,0.2)", borderRadius: 8, color: "#cc4444", fontFamily: "'DM Mono',monospace", fontSize: 10, fontWeight: 600, letterSpacing: 1 }}>■ STOP</button>
+                <button onClick={stop} style={{ height: 32, padding: "0 12px", background: "rgba(220,60,60,0.06)", border: "1px solid rgba(220,60,60,0.15)", borderRadius: 8, color: "#cc4444", fontFamily: "'DM Mono',monospace", fontSize: 10, fontWeight: 600, letterSpacing: 1 }}>■ STOP</button>
               )}
             </div>
           </div>
-          <div style={{ textAlign: "center", marginTop: 6, fontFamily: "'DM Mono',monospace", fontSize: 8, color: "#1a2530", letterSpacing: 1 }}>
+          <div style={{ textAlign: "center", marginTop: 6, fontFamily: "'DM Mono',monospace", fontSize: 8, color: "#c5c0b8", letterSpacing: 1 }}>
             Powered by real ChatGPT · Gemini · Claude APIs
           </div>
         </div>
