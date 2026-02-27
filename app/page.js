@@ -113,35 +113,34 @@ function PulsingDots({ color }) {
 function AIBadge({ persona, isActive, isDone }) {
   return (
     <div style={{
-      display: "flex", flexDirection: "column", alignItems: "center", gap: 6,
-      padding: "10px 14px",
+      display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
+      padding: "6px 10px", flex: 1,
       background: isActive ? persona.colorDim : "rgba(255,255,255,0.02)",
       border: `1px solid ${isActive ? persona.colorBorder : "rgba(255,255,255,0.05)"}`,
-      borderRadius: 12,
+      borderRadius: 10,
       transition: "all 0.4s cubic-bezier(0.34,1.56,0.64,1)",
       transform: isActive ? "translateY(-2px)" : "none",
-      boxShadow: isActive ? `0 8px 32px ${persona.colorGlow}` : "none",
-      minWidth: 72,
+      boxShadow: isActive ? `0 6px 24px ${persona.colorGlow}` : "none",
     }}>
       <div style={{
-        width: 34, height: 34, borderRadius: "50%",
+        width: 28, height: 28, borderRadius: "50%",
         background: isActive ? persona.colorDim : "rgba(255,255,255,0.03)",
         border: `1.5px solid ${isActive ? persona.color : "rgba(255,255,255,0.08)"}`,
         display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: 13, color: isActive ? persona.color : isDone ? persona.color : "#3a3a3a",
+        fontSize: 11, color: isActive ? persona.color : isDone ? persona.color : "#3a3a3a",
         fontWeight: 700, transition: "all 0.4s",
-        boxShadow: isActive ? `0 0 20px ${persona.colorGlow}` : "none",
+        boxShadow: isActive ? `0 0 16px ${persona.colorGlow}` : "none",
         animation: isActive ? "badgePulse 1.8s ease infinite" : "none",
       }}>
         {persona.initial}
       </div>
       <div style={{ textAlign: "center" }}>
         <div style={{
-          fontFamily: "'DM Mono',monospace", fontSize: 10, fontWeight: 600,
+          fontFamily: "'DM Mono',monospace", fontSize: 9, fontWeight: 600,
           color: isActive ? persona.color : isDone ? "#555" : "#333",
           letterSpacing: 0.5, transition: "color 0.4s",
         }}>{persona.name}</div>
-        <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 8, color: "#2a2a2a", marginTop: 1 }}>{persona.model}</div>
+        <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 7, color: "#2a2a2a", marginTop: 1 }}>{persona.model}</div>
       </div>
       {isActive && <PulsingDots color={persona.color} />}
     </div>
@@ -549,31 +548,30 @@ export default function AIDiscussionRoom() {
 
       {/* Header */}
       <header style={{
-        padding: "0 24px", borderBottom: "1px solid rgba(255,255,255,0.05)",
+        padding: "10px 16px", borderBottom: "1px solid rgba(255,255,255,0.05)",
         position: "sticky", top: 0, zIndex: 20,
         background: "rgba(13,17,23,0.95)", backdropFilter: "blur(16px)",
-        display: "flex", alignItems: "stretch", justifyContent: "space-between", minHeight: 68,
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
           <div style={{
-            width: 32, height: 32, borderRadius: 8,
+            width: 28, height: 28, borderRadius: 7, flexShrink: 0,
             background: "linear-gradient(135deg, #00c896, #4d9eff, #ff8c5a)",
             backgroundSize: "200% 200%", animation: "gradientShift 4s ease infinite",
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 12, fontWeight: 700, color: "#0d1117",
+            fontSize: 10, fontWeight: 700, color: "#0d1117",
           }}>AI</div>
-          <div>
-            <h1 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 17, fontWeight: 700, color: "#fff", letterSpacing: -0.3 }}>Discussion Room</h1>
-            <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 8, color: "#2e3a4a", letterSpacing: 2, marginTop: 1 }}>MULTI-AI DEBATE PROTOCOL</div>
+          <div style={{ flex: 1 }}>
+            <h1 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 15, fontWeight: 700, color: "#fff", letterSpacing: -0.3 }}>Discussion Room</h1>
+            <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 7, color: "#2e3a4a", letterSpacing: 2, marginTop: 1 }}>MULTI-AI DEBATE PROTOCOL</div>
           </div>
         </div>
-        <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 4, justifyContent: "center" }}>
           {AI_PERSONAS.map((p) => <AIBadge key={p.id} persona={p} isActive={typingAI === p.id} isDone={isDone} />)}
         </div>
       </header>
 
       {/* Main */}
-      <main style={{ flex: 1, maxWidth: 820, width: "100%", margin: "0 auto", padding: "28px 20px 0" }}>
+      <main style={{ flex: 1, maxWidth: 820, width: "100%", margin: "0 auto", padding: "28px 20px 100px" }}>
         {phase === "idle" && !submitted && (
           <div style={{ textAlign: "center", marginTop: 100, animation: "fadeIn 0.6s ease-out" }}>
             <div style={{ display: "inline-flex", gap: 16, marginBottom: 24, alignItems: "center" }}>
@@ -633,39 +631,39 @@ export default function AIDiscussionRoom() {
       {/* Footer */}
       <footer style={{
         borderTop: "1px solid rgba(255,255,255,0.05)",
-        padding: "18px 20px 24px",
+        padding: "12px 12px 16px",
         background: "rgba(13,17,23,0.98)",
         position: "sticky", bottom: 0, zIndex: 10,
       }}>
         <div style={{ maxWidth: 820, margin: "0 auto" }}>
           {status && (
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12, fontFamily: "'DM Mono',monospace", fontSize: 10, color: "#2a3a4a", letterSpacing: 1.5 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8, fontFamily: "'DM Mono',monospace", fontSize: 9, color: "#2a3a4a", letterSpacing: 1.5 }}>
               <div style={{ width: 5, height: 5, borderRadius: "50%", background: isRunning ? "#00c896" : "#2a3a4a", boxShadow: isRunning ? "0 0 8px rgba(0,200,150,0.6)" : "none", animation: isRunning ? "badgePulse 1.2s ease infinite" : "none", flexShrink: 0 }} />
               {status}
             </div>
           )}
-          <div style={{ display: "flex", gap: 10, alignItems: "flex-end", background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: "12px 12px 12px 18px" }}>
+          <div style={{ display: "flex", gap: 8, alignItems: "flex-end", background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 14, padding: "8px 8px 8px 14px" }}>
             <textarea
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               placeholder="Ask the panel a question..."
               disabled={isRunning}
-              rows={2}
-              style={{ flex: 1, background: "transparent", border: "none", color: "#e8e8e8", fontSize: 14.5, fontFamily: "'Lora',Georgia,serif", lineHeight: 1.65, padding: 0, opacity: isRunning ? 0.4 : 1 }}
+              rows={1}
+              style={{ flex: 1, background: "transparent", border: "none", color: "#e8e8e8", fontSize: 14, fontFamily: "'Lora',Georgia,serif", lineHeight: 1.5, padding: 0, opacity: isRunning ? 0.4 : 1 }}
               onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey && !isRunning) { e.preventDefault(); runDiscussion(); } }}
             />
-            <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0 }}>
-              <button onClick={reset} style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)", color: "#2e3a4a", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center" }} title="Reset">↺</button>
+            <div style={{ display: "flex", gap: 6, alignItems: "center", flexShrink: 0 }}>
+              <button onClick={reset} style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)", color: "#2e3a4a", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center" }} title="Reset">↺</button>
               {!isRunning ? (
-                <button onClick={runDiscussion} disabled={!question.trim()} style={{ height: 36, padding: "0 20px", background: question.trim() ? "linear-gradient(135deg, #00c896, #4d9eff, #ff8c5a)" : "rgba(255,255,255,0.04)", backgroundSize: "200% 200%", animation: question.trim() ? "gradientShift 3s ease infinite" : "none", border: question.trim() ? "none" : "1px solid rgba(255,255,255,0.05)", borderRadius: 10, color: question.trim() ? "#0d1117" : "#252f3a", fontFamily: "'DM Mono',monospace", fontSize: 11, fontWeight: 600, letterSpacing: 1.5, cursor: question.trim() ? "pointer" : "not-allowed", whiteSpace: "nowrap" }}>
+                <button onClick={runDiscussion} disabled={!question.trim()} style={{ height: 32, padding: "0 14px", background: question.trim() ? "linear-gradient(135deg, #00c896, #4d9eff, #ff8c5a)" : "rgba(255,255,255,0.04)", backgroundSize: "200% 200%", animation: question.trim() ? "gradientShift 3s ease infinite" : "none", border: question.trim() ? "none" : "1px solid rgba(255,255,255,0.05)", borderRadius: 8, color: question.trim() ? "#0d1117" : "#252f3a", fontFamily: "'DM Mono',monospace", fontSize: 10, fontWeight: 600, letterSpacing: 1.5, cursor: question.trim() ? "pointer" : "not-allowed", whiteSpace: "nowrap" }}>
                   DEBATE →
                 </button>
               ) : (
-                <button onClick={stop} style={{ height: 36, padding: "0 16px", background: "rgba(255,80,80,0.08)", border: "1px solid rgba(255,80,80,0.2)", borderRadius: 10, color: "#cc4444", fontFamily: "'DM Mono',monospace", fontSize: 11, fontWeight: 600, letterSpacing: 1 }}>■ STOP</button>
+                <button onClick={stop} style={{ height: 32, padding: "0 12px", background: "rgba(255,80,80,0.08)", border: "1px solid rgba(255,80,80,0.2)", borderRadius: 8, color: "#cc4444", fontFamily: "'DM Mono',monospace", fontSize: 10, fontWeight: 600, letterSpacing: 1 }}>■ STOP</button>
               )}
             </div>
           </div>
-          <div style={{ textAlign: "center", marginTop: 10, fontFamily: "'DM Mono',monospace", fontSize: 9, color: "#1a2530", letterSpacing: 1 }}>
+          <div style={{ textAlign: "center", marginTop: 6, fontFamily: "'DM Mono',monospace", fontSize: 8, color: "#1a2530", letterSpacing: 1 }}>
             Powered by real ChatGPT · Gemini · Claude APIs
           </div>
         </div>
