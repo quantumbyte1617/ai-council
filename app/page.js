@@ -113,6 +113,23 @@ function isSimpleGreeting(text) {
   return g.some((x) => n === x) || (n.split(/\s+/).length <= 3 && g.some((x) => n.startsWith(x)));
 }
 
+function isCasualRequest(text) {
+  const n = text.toLowerCase().replace(/[!?.,;:'"…\-()]/g, '').trim();
+  const patterns = [
+    'tell me a joke', 'tell a joke', 'tell joke', 'say something funny', 'make me laugh',
+    'tell me a riddle', 'tell a riddle', 'tell me a pun', 'tell a pun',
+    'write a poem', 'write me a poem', 'write a haiku', 'write a limerick',
+    'tell me a story', 'tell a story', 'write a story', 'write me a story',
+    'sing a song', 'sing me a song', 'give me a compliment', 'compliment me',
+    'tell me a fun fact', 'tell me something funny', 'tell me something interesting',
+    'surprise me', 'entertain me', 'amuse me', 'cheer me up',
+    'roast me', 'motivate me', 'inspire me',
+    'introduce yourself', 'describe yourself', 'tell me about yourself',
+    'say something nice', 'say something cool', 'say something random',
+  ];
+  return patterns.some(p => n.includes(p));
+}
+
 function checkConsensus(messages, round) {
   if (round < 3) return false;
   const last = messages.filter((m) => m.round === round);
@@ -131,6 +148,21 @@ function PulsingDots({ color }) {
       ))}
     </span>
   );
+}
+
+function AIIcon({ id, size = 14, color = "currentColor" }) {
+  const s = { width: size, height: size, display: "block", fill: color, flexShrink: 0 };
+  switch (id) {
+    case "chatgpt":
+      return (<svg style={s} viewBox="0 0 24 24"><path d="M22.28 9.82a5.98 5.98 0 00-.52-4.91 6.05 6.05 0 00-6.51-2.9A6.07 6.07 0 004.98 4.18a5.98 5.98 0 00-4 2.9 6.05 6.05 0 00.74 7.1 5.98 5.98 0 00.51 4.91 6.05 6.05 0 006.51 2.9A5.98 5.98 0 0013.26 24a6.06 6.06 0 005.77-4.21 5.99 5.99 0 004-2.9 6.06 6.06 0 00-.75-7.07zm-9.02 12.61a4.48 4.48 0 01-2.88-1.04l.14-.08 4.78-2.76a.8.8 0 00.39-.68v-6.74l2.02 1.17a.07.07 0 01.04.05v5.58a4.5 4.5 0 01-4.49 4.5zm-9.66-4.13a4.47 4.47 0 01-.53-3.01l.14.09 4.78 2.76a.77.77 0 00.78 0l5.84-3.37v2.33a.08.08 0 01-.03.06l-4.84 2.79a4.5 4.5 0 01-6.14-1.65zM2.34 7.9a4.49 4.49 0 012.37-1.97V11.6a.77.77 0 00.39.68l5.81 3.35-2.02 1.17a.08.08 0 01-.07 0l-4.83-2.79A4.5 4.5 0 012.34 7.87zm16.6 3.86L13.1 8.36l2.02-1.16a.08.08 0 01.07 0l4.83 2.79a4.49 4.49 0 01-.68 8.1V12.44a.79.79 0 00-.41-.68zm2.01-3.02l-.14-.09-4.77-2.78a.78.78 0 00-.79 0L9.41 9.23V6.9a.07.07 0 01.03-.06l4.83-2.79a4.5 4.5 0 016.68 4.66zM8.31 12.86l-2.02-1.16a.08.08 0 01-.04-.06V6.07a4.5 4.5 0 017.38-3.45l-.14.08-4.78 2.76a.8.8 0 00-.39.68zm1.1-2.36l2.6-1.5 2.6 1.5v3l-2.6 1.5-2.6-1.5z"/></svg>);
+    case "gemini":
+      return (<svg style={s} viewBox="0 0 24 24"><path d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.373 12 12 0-6.627 5.373-12 12-12-6.627 0-12-5.373-12-12z"/></svg>);
+    case "claude":
+      return (<svg style={s} viewBox="0 0 24 24"><path d="M12 1.5c.6 4.2 2.8 7.2 7.3 7.5-4.5.3-6.7 3.3-7.3 7.5-.6-4.2-2.8-7.2-7.3-7.5 4.5-.3 6.7-3.3 7.3-7.5zM19 16c.3 2.1 1.4 3.5 3.5 3.7-2.1.2-3.2 1.6-3.5 3.7-.3-2.1-1.4-3.5-3.5-3.7 2.1-.2 3.2-1.6 3.5-3.7z"/></svg>);
+    case "grok":
+      return (<svg style={s} viewBox="0 0 24 24"><path d="M13.98 10.58L22.54 0h-2.03l-7.43 8.64L6.92 0H0l8.98 13.06L0 24h2.03l7.85-9.12L16.52 24h6.92l-9.46-13.42zm-2.78 3.23l-.91-1.3L3.2 1.56h3.12l5.84 8.36.91 1.3 7.6 10.87h-3.12l-6.35-9.28z"/></svg>);
+    default: return null;
+  }
 }
 
 function AIBadge({ persona, ac, isActive, isDone, enabled, onToggle, isRunning, t }) {
@@ -154,12 +186,11 @@ function AIBadge({ persona, ac, isActive, isDone, enabled, onToggle, isRunning, 
         background: isActive ? ac.dim : t.surfaceH,
         border: `1.5px solid ${isActive ? ac.color : t.borderMed}`,
         display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: 11, color: isActive ? ac.color : isDone && enabled ? ac.color : t.textDim,
-        fontWeight: 700, transition: "all 0.4s",
+        transition: "all 0.4s",
         boxShadow: isActive ? `0 0 12px ${ac.glow}` : "none",
         animation: isActive ? "badgePulse 1.8s ease infinite" : "none",
       }}>
-        {persona.initial}
+        <AIIcon id={persona.id} size={13} color={isActive ? ac.color : isDone && enabled ? ac.color : t.textDim} />
       </div>
       <div style={{ textAlign: "center" }}>
         <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 9, fontWeight: 600, color: isActive ? ac.color : isDone && enabled ? t.textSec : t.textDim, letterSpacing: 0.5, transition: "color 0.4s" }}>{persona.name}</div>
@@ -215,7 +246,7 @@ function UserBubble({ text, t }) {
 function AIMessage({ msg, ac, persona, delay = 0, t }) {
   return (
     <div style={{ display: "flex", gap: 14, marginBottom: 14, animation: `slideFromLeft 0.4s cubic-bezier(0.34,1.2,0.64,1) ${delay}s both` }}>
-      <div style={{ width: 38, height: 38, borderRadius: "50%", flexShrink: 0, marginTop: 2, background: ac.dim, border: `1.5px solid ${ac.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: ac.color, fontWeight: 700 }}>{persona.initial}</div>
+      <div style={{ width: 38, height: 38, borderRadius: "50%", flexShrink: 0, marginTop: 2, background: ac.dim, border: `1.5px solid ${ac.border}`, display: "flex", alignItems: "center", justifyContent: "center" }}><AIIcon id={persona.id} size={17} color={ac.color} /></div>
       <div style={{ flex: 1 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
           <span style={{ color: ac.color, fontWeight: 700, fontSize: 12, fontFamily: "'DM Mono',monospace", letterSpacing: 0.5 }}>{persona.name}</span>
@@ -230,7 +261,7 @@ function AIMessage({ msg, ac, persona, delay = 0, t }) {
 function TypingMessage({ ac, persona, t }) {
   return (
     <div style={{ display: "flex", gap: 14, marginBottom: 14, animation: "fadeIn 0.3s ease-out" }}>
-      <div style={{ width: 38, height: 38, borderRadius: "50%", flexShrink: 0, marginTop: 2, background: ac.dim, border: `1.5px solid ${ac.color}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: ac.color, fontWeight: 700, animation: "badgePulse 1.8s ease infinite", boxShadow: `0 0 12px ${ac.glow}` }}>{persona.initial}</div>
+      <div style={{ width: 38, height: 38, borderRadius: "50%", flexShrink: 0, marginTop: 2, background: ac.dim, border: `1.5px solid ${ac.color}`, display: "flex", alignItems: "center", justifyContent: "center", animation: "badgePulse 1.8s ease infinite", boxShadow: `0 0 12px ${ac.glow}` }}><AIIcon id={persona.id} size={17} color={ac.color} /></div>
       <div style={{ flex: 1 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
           <span style={{ color: ac.color, fontWeight: 700, fontSize: 12, fontFamily: "'DM Mono',monospace" }}>{persona.name}</span>
@@ -411,7 +442,7 @@ export default function AIDiscussionRoom() {
     if (submitted && (phase === "done" || phase === "stopped")) {
       setHistory(prev => [...prev, {
         question: submitted, messages: [...messages], finalAnswer,
-        isGreeting: isSimpleGreeting(submitted), debateOpen, debateStartTime, debateEndTime,
+        isGreeting: isSimpleGreeting(submitted) || isCasualRequest(submitted), debateOpen, debateStartTime, debateEndTime,
       }]);
     }
 
@@ -431,7 +462,7 @@ export default function AIDiscussionRoom() {
     const activePersonas = AI_PERSONAS.filter(p => enabledAIs.has(p.id));
     const msgs = [];
     let consensusReached = false;
-    const skipDebate = isSimpleGreeting(q);
+    const skipDebate = isSimpleGreeting(q) || isCasualRequest(q);
 
     setStatus(skipDebate ? "Each AI responds..." : "Round 1 — each AI answers independently...");
     for (const p of activePersonas) {
@@ -497,7 +528,7 @@ export default function AIDiscussionRoom() {
   const rounds = {};
   messages.forEach((m) => { if (!rounds[m.round]) rounds[m.round] = []; rounds[m.round].push(m); });
   const typingPersona = AI_PERSONAS.find(p => p.id === typingAI);
-  const isGreeting = submitted && isSimpleGreeting(submitted);
+  const isGreeting = submitted && (isSimpleGreeting(submitted) || isCasualRequest(submitted));
   const showIdle = phase === "idle" && !submitted && history.length === 0;
 
   return (
@@ -552,7 +583,7 @@ export default function AIDiscussionRoom() {
               {AI_PERSONAS.map((p, i) => {
                 const ac = getAIColors(p.id, darkMode);
                 return (
-                  <div key={p.id} style={{ width: 50, height: 50, borderRadius: "50%", background: ac.dim, border: `1px solid ${ac.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, color: ac.color, opacity: enabledAIs.has(p.id) ? 0.5 : 0.15, animation: `fadeIn 0.6s ease-out ${i * 0.15}s both`, transition: "opacity 0.3s" }}>{p.initial}</div>
+                  <div key={p.id} style={{ width: 50, height: 50, borderRadius: "50%", background: ac.dim, border: `1px solid ${ac.border}`, display: "flex", alignItems: "center", justifyContent: "center", opacity: enabledAIs.has(p.id) ? 0.5 : 0.15, animation: `fadeIn 0.6s ease-out ${i * 0.15}s both`, transition: "opacity 0.3s" }}><AIIcon id={p.id} size={24} color={ac.color} /></div>
                 );
               })}
             </div>
