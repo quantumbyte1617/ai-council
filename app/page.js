@@ -13,6 +13,9 @@ const AI_PERSONAS = [
   { id: "claude", name: "Claude", model: "Claude Opus 4", apiRoute: "/api/claude", initial: "◆",
     blindPrompt: `You are Claude (Opus 4) by Anthropic. Answer the following question independently and thoroughly. Give your best factual answer. Be confident and clear. 3-5 sentences.`,
     debatePrompt: `You are Claude (Opus 4) by Anthropic in a live factual debate. You have seen everyone's answers including previous debate rounds. Critically evaluate what was said — name names, point out where another AI was wrong or incomplete, defend your own previous points if challenged, and add new arguments. Be direct, factual, specific. Reference others by name. 3-5 sentences. No fluff.` },
+  { id: "grok", name: "Grok", model: "Grok 3 Fast", apiRoute: "/api/grok", initial: "𝕏",
+    blindPrompt: `You are Grok (Grok 3) by xAI. Answer the following question independently and thoroughly. Give your best factual answer. Be confident and clear. 3-5 sentences.`,
+    debatePrompt: `You are Grok (Grok 3) by xAI in a live factual debate. You have seen everyone's answers including previous debate rounds. Critically evaluate what was said — name names, point out where another AI was wrong or incomplete, defend your own previous points if challenged, and add new arguments. Be direct, factual, specific. Reference others by name. 3-5 sentences. No fluff.` },
 ];
 
 const COUNCIL_FINAL_SYSTEM = `You are the synthesizer for the Council of AI — a panel that has just completed a multi-round debate. Deliver the FINAL answer on behalf of the entire council: determine what is most factually correct, where there was disagreement choose the most defensible position, write a clear polished complete answer the user can trust. 4-6 sentences, authoritative and direct. Do NOT reference the debate process or mention any individual AI by name. Speak directly to the user as the unified voice of the council.`;
@@ -32,6 +35,8 @@ function getAIColors(id, dark) {
                  : { color: "#2563eb", dim: "rgba(37,99,235,0.08)", border: "rgba(37,99,235,0.2)", glow: "rgba(37,99,235,0.15)" },
     claude: dark ? { color: "#f59e0b", dim: "rgba(245,158,11,0.12)", border: "rgba(245,158,11,0.25)", glow: "rgba(245,158,11,0.2)" }
                  : { color: "#c2570a", dim: "rgba(194,87,10,0.08)", border: "rgba(194,87,10,0.2)", glow: "rgba(194,87,10,0.15)" },
+    grok: dark ? { color: "#a78bfa", dim: "rgba(167,139,250,0.12)", border: "rgba(167,139,250,0.25)", glow: "rgba(167,139,250,0.2)" }
+               : { color: "#7c3aed", dim: "rgba(124,58,237,0.08)", border: "rgba(124,58,237,0.2)", glow: "rgba(124,58,237,0.15)" },
   };
   return c[id];
 }
@@ -374,7 +379,7 @@ export default function AIDiscussionRoom() {
   const [debateEndTime, setDebateEndTime] = useState(null);
   const [history, setHistory] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
-  const [enabledAIs, setEnabledAIs] = useState(new Set(["chatgpt", "gemini", "claude"]));
+  const [enabledAIs, setEnabledAIs] = useState(new Set(["chatgpt", "gemini", "claude", "grok"]));
   const bottomRef = useRef(null);
   const stopRef = useRef(false);
 
@@ -630,7 +635,7 @@ export default function AIDiscussionRoom() {
             </div>
           </div>
           <div style={{ textAlign: "center", marginTop: 6, fontFamily: "'DM Mono',monospace", fontSize: 8, color: t.textFaint, letterSpacing: 1 }}>
-            Powered by real ChatGPT · Gemini · Claude APIs
+            Powered by real ChatGPT · Gemini · Claude · Grok APIs
           </div>
         </div>
       </footer>
