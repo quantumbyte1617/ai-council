@@ -18,7 +18,23 @@ const AI_PERSONAS = [
     debatePrompt: `You are Grok (Grok 3) by xAI in a live factual debate. You have seen everyone's answers including previous debate rounds. Critically evaluate what was said — name names, point out where another AI was wrong or incomplete, defend your own previous points if challenged, and add new arguments. Be direct, factual, specific. Reference others by name. 3-5 sentences. No fluff.` },
 ];
 
-const COUNCIL_FINAL_SYSTEM = `You are the synthesizer for the Council of AI — a panel that has just completed a multi-round debate. Deliver the FINAL answer on behalf of the entire council. Your tone is warm, witty, and a little theatrical — like a wise narrator wrapping up an epic saga. Use vivid analogies, fun metaphors, and the occasional cheeky remark to keep things entertaining. Sprinkle in a few relevant emojis throughout your answer to make it visually fun and engaging (2-4 emojis total, placed naturally — not forced). Sprinkle in light humor where appropriate but always stay factually accurate. Determine what is most factually correct, where there was disagreement choose the most defensible position. Write a clear, polished, engaging answer the user will actually enjoy reading — something that feels like getting advice from that one brilliant friend who also happens to be hilarious. 4-6 sentences. Do NOT reference the debate process or mention any individual AI by name. Speak directly to the user as the unified voice of the council.`;
+const COUNCIL_FINAL_SYSTEM = `You are the synthesizer for the Council of AI — a panel that has just completed a multi-round debate. Deliver the FINAL answer using EXACTLY this structured format (use markdown bold with ** for emphasis):
+
+**🎯 Key Takeaway**: [One punchy sentence — the verdict in a nutshell]
+
+[2-3 sentence engaging summary. Be warm, witty, and theatrical — like a wise narrator. Use vivid analogies and fun metaphors. Add 1-2 relevant emojis naturally.]
+
+✅ **Common Ground**:
+• [A key point the panel agreed on]
+• [Another agreed point if applicable]
+
+⚖️ **Where It Gets Interesting**:
+• [Where opinions differed or nuance exists]
+• [Another point of debate if applicable]
+
+📊 **Confidence Level**: [X]% — [Brief explanation. Use 90%+ for well-established facts, 60-80% for debated topics, below 60% for highly subjective matters]
+
+Stay factually accurate. Do NOT reference the debate process or mention any individual AI by name. Speak directly to the user as the unified voice of the council. Always follow this exact format with the section headers.`;
 
 const PRESET_TOPICS = [
   { emoji: "🧠", label: "Ethics", question: "Is it ethical for AI to make life-or-death decisions in healthcare?" },
@@ -328,6 +344,56 @@ function DebateSection({ isOpen, onToggle, rounds, messages, typingAI, typingPer
   );
 }
 
+function renderCouncilAnswer(text, t) {
+  if (!text) return null;
+  const lines = text.split('\n');
+  const elements = [];
+
+  const renderInline = (str) => {
+    const parts = str.split(/\*\*(.*?)\*\*/g);
+    return parts.map((part, j) =>
+      j % 2 === 1 ? <strong key={j} style={{ fontWeight: 600, color: t.vText }}>{part}</strong> : part
+    );
+  };
+
+  lines.forEach((line, i) => {
+    const trimmed = line.trim();
+    if (!trimmed) { elements.push(<div key={i} style={{ height: 10 }} />); return; }
+
+    // Bullet points
+    if (/^[•\-\*]\s/.test(trimmed)) {
+      const bulletText = trimmed.replace(/^[•\-\*]\s*/, '');
+      elements.push(
+        <div key={i} style={{ display: 'flex', gap: 10, paddingLeft: 6, marginBottom: 5, alignItems: 'flex-start' }}>
+          <span style={{ color: t.vc, flexShrink: 0, marginTop: 8, fontSize: 5 }}>●</span>
+          <span style={{ flex: 1 }}>{renderInline(bulletText)}</span>
+        </div>
+      );
+      return;
+    }
+
+    // Confidence level with visual bar
+    const confMatch = trimmed.match(/(\d+)%/);
+    if (confMatch && /confidence/i.test(trimmed)) {
+      const pct = parseInt(confMatch[1]);
+      elements.push(
+        <div key={i} style={{ marginTop: 4, marginBottom: 4 }}>
+          <div style={{ marginBottom: 8 }}>{renderInline(trimmed)}</div>
+          <div style={{ height: 5, borderRadius: 3, background: t.border, overflow: 'hidden' }}>
+            <div style={{ height: '100%', width: `${pct}%`, borderRadius: 3, background: t.vc, transition: 'width 1.2s ease-out' }} />
+          </div>
+        </div>
+      );
+      return;
+    }
+
+    // Regular line
+    elements.push(<div key={i} style={{ marginBottom: 6 }}>{renderInline(trimmed)}</div>);
+  });
+
+  return elements;
+}
+
 function FinalVerdict({ text, isLoading, t }) {
   return (
     <div style={{ animation: "fadeIn 0.6s ease-out", marginTop: 24, marginBottom: 16 }}>
@@ -341,17 +407,16 @@ function FinalVerdict({ text, isLoading, t }) {
       </div>
       <div style={{ position: "relative", overflow: "hidden", background: `linear-gradient(145deg, ${t.vDim} 0%, rgba(0,0,0,0) 100%)`, border: `1px solid ${t.vBorder}`, borderRadius: 16, padding: "24px 28px", boxShadow: `0 2px 24px ${t.vGlow}` }}>
         <div style={{ position: "absolute", top: 0, right: 0, width: 80, height: 80, background: `radial-gradient(circle at top right, ${t.vDim}, transparent 70%)`, pointerEvents: "none" }} />
-        <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
-          <div style={{ width: 44, height: 44, borderRadius: "50%", flexShrink: 0, background: t.vDim, border: `2px solid ${isLoading ? t.vc : t.vBorder}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, color: t.vc, fontWeight: 700, boxShadow: `0 0 ${isLoading ? 16 : 8}px ${t.vGlow}`, animation: isLoading ? "badgePulse 1.5s ease infinite" : "none" }}>⚖</div>
-          <div style={{ flex: 1 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-              <span style={{ color: t.vc, fontWeight: 700, fontSize: 13, fontFamily: "'DM Mono',monospace" }}>Council of AI</span>
-              <span style={{ color: t.vBadge, fontSize: 9, fontFamily: "'DM Mono',monospace", background: t.vDim, border: `1px solid ${t.vBorder}`, padding: "2px 7px", borderRadius: 4 }}>Consensus Answer</span>
+        <div style={{ color: t.vc, fontSize: 15, lineHeight: 1.85, fontFamily: "'Lora',Georgia,serif", fontWeight: 400, letterSpacing: 0.1 }}>
+          {isLoading ? (
+            <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+              <div style={{ width: 44, height: 44, borderRadius: "50%", flexShrink: 0, background: t.vDim, border: `2px solid ${t.vc}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, color: t.vc, boxShadow: `0 0 16px ${t.vGlow}`, animation: "badgePulse 1.5s ease infinite" }}>⚖</div>
+              <div>
+                <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 11, color: t.vc, marginBottom: 4 }}>Council deliberating...</div>
+                <PulsingDots color={t.vc} />
+              </div>
             </div>
-            <div style={{ color: t.vc, fontSize: 15.5, lineHeight: 1.9, fontFamily: "'Lora',Georgia,serif", fontWeight: 400, letterSpacing: 0.1 }}>
-              {isLoading ? <PulsingDots color={t.vc} /> : text}
-            </div>
-          </div>
+          ) : renderCouncilAnswer(text, t)}
         </div>
       </div>
     </div>
