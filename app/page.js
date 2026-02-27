@@ -295,12 +295,20 @@ function DebateSection({ isOpen, onToggle, rounds, messages, typingAI, typingPer
   const isDebating = phase !== "idle" && phase !== "done" && phase !== "stopped" && !isFinalLoading;
   const isComplete = phase === "done" || phase === "synthesizing" || isFinalLoading;
   const maxRound = messages.length > 0 ? Math.max(...messages.map(m => m.round)) : 0;
+  const currentPhaseRound = parseInt(phase.replace('round', '')) || 0;
   const totalDebateRounds = MAX_DEBATE_ROUNDS - 1;
   const elapsedSeconds = debateEndTime && debateStartTime ? Math.round((debateEndTime - debateStartTime) / 1000) : null;
+  const typingName = typingPersona?.name;
 
   let statusLabel = "";
   if (isDebating) {
-    statusLabel = phase === "round1" ? "Gathering independent answers..." : `Debating... Round ${maxRound - 1} of ${totalDebateRounds}`;
+    if (phase === "round1") {
+      statusLabel = typingName ? `${typingName} answering...` : "Gathering independent answers...";
+    } else {
+      statusLabel = typingName
+        ? `${typingName} debating · Round ${currentPhaseRound - 1} of ${totalDebateRounds}`
+        : `Debating... Round ${currentPhaseRound - 1} of ${totalDebateRounds}`;
+    }
   } else if (isComplete) {
     statusLabel = elapsedSeconds ? `Debated in ${Math.max(maxRound - 1, 1)} round${maxRound - 1 !== 1 ? "s" : ""} (${elapsedSeconds}s)` : `Debated in ${Math.max(maxRound - 1, 1)} round${maxRound - 1 !== 1 ? "s" : ""}`;
   } else {
