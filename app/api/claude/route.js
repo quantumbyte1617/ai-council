@@ -13,6 +13,6 @@ export async function POST(request) {
     return Response.json({ text: message.content[0].text });
   } catch (error) {
     console.error("Claude API error:", error);
-    return Response.json({ error: "Claude API failed", text: "I was unable to respond at this time." }, { status: 500 });
+    return Response.json({ error: "Claude API failed", detail: error.message, keySet: !!process.env.CLAUDE_API_KEY, text: "I was unable to respond at this time." }, { status: 500 });
   }
 }

@@ -10,6 +10,6 @@ export async function POST(request) {
     return Response.json({ text });
   } catch (error) {
     console.error("Gemini API error:", error);
-    return Response.json({ error: "Gemini API failed", text: "I was unable to respond at this time." }, { status: 500 });
+    return Response.json({ error: "Gemini API failed", detail: error.message, keySet: !!process.env.GEMINI_API_KEY, text: "I was unable to respond at this time." }, { status: 500 });
   }
 }
