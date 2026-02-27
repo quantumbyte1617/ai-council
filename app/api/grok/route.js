@@ -18,6 +18,6 @@ export async function POST(request) {
     return Response.json({ text: response.choices[0].message.content });
   } catch (error) {
     console.error("Grok API error:", error);
-    return Response.json({ error: "Grok API failed", detail: error.message, keySet: !!process.env.XAI_API_KEY, text: "I was unable to respond at this time." }, { status: 500 });
+    return Response.json({ error: "Grok API failed", text: "I was unable to respond at this time." }, { status: 500 });
   }
 }
