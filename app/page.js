@@ -530,7 +530,7 @@ export default function AIDiscussionRoom() {
   const isGreeting = submitted && isSimpleGreeting(submitted);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0d1117", color: "#e0e0e0", display: "flex", flexDirection: "column", fontFamily: "'Lora',Georgia,serif" }}>
+    <div style={{ minHeight: "100vh", background: "#1a2233", color: "#e0e0e0", display: "flex", flexDirection: "column", fontFamily: "'Lora',Georgia,serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap');
         @keyframes dotBounce { 0%,80%,100%{transform:translateY(0);opacity:0.9} 40%{transform:translateY(-6px);opacity:1} }
@@ -541,7 +541,7 @@ export default function AIDiscussionRoom() {
         @keyframes gradientShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
         @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
         * { box-sizing:border-box; margin:0; padding:0; }
-        ::-webkit-scrollbar{width:3px} ::-webkit-scrollbar-track{background:#0d1117} ::-webkit-scrollbar-thumb{background:#1e2530;border-radius:2px}
+        ::-webkit-scrollbar{width:3px} ::-webkit-scrollbar-track{background:#1a2233} ::-webkit-scrollbar-thumb{background:#1e2530;border-radius:2px}
         button{cursor:pointer;transition:all 0.25s;border:none;outline:none}
         textarea{outline:none;resize:none}
       `}</style>
@@ -550,7 +550,7 @@ export default function AIDiscussionRoom() {
       <header style={{
         padding: "10px 16px", borderBottom: "1px solid rgba(255,255,255,0.05)",
         position: "sticky", top: 0, zIndex: 20,
-        background: "rgba(13,17,23,0.95)", backdropFilter: "blur(16px)",
+        background: "rgba(26,34,51,0.95)", backdropFilter: "blur(16px)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
           <div style={{
@@ -558,7 +558,7 @@ export default function AIDiscussionRoom() {
             background: "linear-gradient(135deg, #00c896, #4d9eff, #ff8c5a)",
             backgroundSize: "200% 200%", animation: "gradientShift 4s ease infinite",
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 10, fontWeight: 700, color: "#0d1117",
+            fontSize: 10, fontWeight: 700, color: "#1a2233",
           }}>AI</div>
           <div style={{ flex: 1 }}>
             <h1 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 15, fontWeight: 700, color: "#fff", letterSpacing: -0.3 }}>Discussion Room</h1>
@@ -632,7 +632,7 @@ export default function AIDiscussionRoom() {
       <footer style={{
         borderTop: "1px solid rgba(255,255,255,0.05)",
         padding: "12px 12px 16px",
-        background: "rgba(13,17,23,0.98)",
+        background: "rgba(26,34,51,0.98)",
         position: "sticky", bottom: 0, zIndex: 10,
       }}>
         <div style={{ maxWidth: 820, margin: "0 auto" }}>
@@ -655,7 +655,7 @@ export default function AIDiscussionRoom() {
             <div style={{ display: "flex", gap: 6, alignItems: "center", flexShrink: 0 }}>
               <button onClick={reset} style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)", color: "#2e3a4a", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center" }} title="Reset">↺</button>
               {!isRunning ? (
-                <button onClick={runDiscussion} disabled={!question.trim()} style={{ height: 32, padding: "0 14px", background: question.trim() ? "linear-gradient(135deg, #00c896, #4d9eff, #ff8c5a)" : "rgba(255,255,255,0.04)", backgroundSize: "200% 200%", animation: question.trim() ? "gradientShift 3s ease infinite" : "none", border: question.trim() ? "none" : "1px solid rgba(255,255,255,0.05)", borderRadius: 8, color: question.trim() ? "#0d1117" : "#252f3a", fontFamily: "'DM Mono',monospace", fontSize: 10, fontWeight: 600, letterSpacing: 1.5, cursor: question.trim() ? "pointer" : "not-allowed", whiteSpace: "nowrap" }}>
+                <button onClick={runDiscussion} disabled={!question.trim()} style={{ height: 32, padding: "0 14px", background: question.trim() ? "linear-gradient(135deg, #00c896, #4d9eff, #ff8c5a)" : "rgba(255,255,255,0.04)", backgroundSize: "200% 200%", animation: question.trim() ? "gradientShift 3s ease infinite" : "none", border: question.trim() ? "none" : "1px solid rgba(255,255,255,0.05)", borderRadius: 8, color: question.trim() ? "#1a2233" : "#252f3a", fontFamily: "'DM Mono',monospace", fontSize: 10, fontWeight: 600, letterSpacing: 1.5, cursor: question.trim() ? "pointer" : "not-allowed", whiteSpace: "nowrap" }}>
                   DEBATE →
                 </button>
               ) : (
