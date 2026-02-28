@@ -1,21 +1,86 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 
-const MAX_DEBATE_ROUNDS = 4;
+const INITIAL_DEBATE_ROUNDS = 4;
+const EXTENDED_DEBATE_ROUNDS = 6;
 
 const AI_PERSONAS = [
   { id: "chatgpt", name: "ChatGPT", model: "GPT-4o", apiRoute: "/api/chatgpt", initial: "G",
-    blindPrompt: `You are ChatGPT (GPT-4o) by OpenAI. Answer the following question independently and thoroughly. Give your best factual answer. Be confident and clear. 3-5 sentences.`,
-    debatePrompt: `You are ChatGPT (GPT-4o) by OpenAI in a live factual debate. You have seen everyone's answers including previous debate rounds. Critically evaluate what was said — name names, point out where another AI was wrong or incomplete, defend your own previous points if challenged, and add new arguments. Be direct, factual, specific. Reference others by name. 3-5 sentences. No fluff.` },
+    blindPrompt: `You are ChatGPT (GPT-4o) by OpenAI. Answer the following question independently and thoroughly. Give your best factual answer with clear reasoning. If factual, state the answer confidently with your basis. If subjective, present your perspective with supporting arguments. Be confident and clear. 3-5 sentences.`,
+    debatePrompt: `You are ChatGPT (GPT-4o) by OpenAI in a multi-AI discussion.
+
+BEFORE responding, classify the question: Is this primarily FACTUAL (has a verifiable answer) or SUBJECTIVE (opinion/nuance-based)?
+
+FOR FACTUAL QUESTIONS:
+- If another AI stated a correct fact, explicitly acknowledge it ("I agree with [Name] that...")
+- Do NOT argue against correct information just to seem contrarian
+- If you made an error in a previous round, correct yourself clearly
+- If all AIs agree on the facts, say so and add only genuinely new information if any
+- Provide your reasoning or source basis for any factual claim
+
+FOR SUBJECTIVE/NUANCED QUESTIONS:
+- Genuine disagreement is valuable — defend your perspective with reasoning
+- Reference others by name and engage with their specific arguments
+- Offer alternative viewpoints that haven't been raised
+
+ALWAYS: Be direct and concise. 2-5 sentences. If there is nothing meaningful left to debate, say "I agree with the consensus" and briefly summarize the agreed answer. Do not manufacture disagreement.` },
   { id: "gemini", name: "Gemini", model: "Gemini 1.5 Pro", apiRoute: "/api/gemini", initial: "◈",
-    blindPrompt: `You are Gemini (1.5 Pro) by Google. Answer the following question independently and thoroughly. Give your best factual answer. Be confident and clear. 3-5 sentences.`,
-    debatePrompt: `You are Gemini (1.5 Pro) by Google in a live factual debate. You have seen everyone's answers including previous debate rounds. Critically evaluate what was said — name names, point out where another AI was wrong or incomplete, defend your own previous points if challenged, and add new arguments. Be direct, factual, specific. Reference others by name. 3-5 sentences. No fluff.` },
+    blindPrompt: `You are Gemini (1.5 Pro) by Google. Answer the following question independently and thoroughly. Give your best factual answer with clear reasoning. If factual, state the answer confidently with your basis. If subjective, present your perspective with supporting arguments. Be confident and clear. 3-5 sentences.`,
+    debatePrompt: `You are Gemini (1.5 Pro) by Google in a multi-AI discussion.
+
+BEFORE responding, classify the question: Is this primarily FACTUAL (has a verifiable answer) or SUBJECTIVE (opinion/nuance-based)?
+
+FOR FACTUAL QUESTIONS:
+- If another AI stated a correct fact, explicitly acknowledge it ("I agree with [Name] that...")
+- Do NOT argue against correct information just to seem contrarian
+- If you made an error in a previous round, correct yourself clearly
+- If all AIs agree on the facts, say so and add only genuinely new information if any
+- Provide your reasoning or source basis for any factual claim
+
+FOR SUBJECTIVE/NUANCED QUESTIONS:
+- Genuine disagreement is valuable — defend your perspective with reasoning
+- Reference others by name and engage with their specific arguments
+- Offer alternative viewpoints that haven't been raised
+
+ALWAYS: Be direct and concise. 2-5 sentences. If there is nothing meaningful left to debate, say "I agree with the consensus" and briefly summarize the agreed answer. Do not manufacture disagreement.` },
   { id: "claude", name: "Claude", model: "Claude Opus 4", apiRoute: "/api/claude", initial: "◆",
-    blindPrompt: `You are Claude (Opus 4) by Anthropic. Answer the following question independently and thoroughly. Give your best factual answer. Be confident and clear. 3-5 sentences.`,
-    debatePrompt: `You are Claude (Opus 4) by Anthropic in a live factual debate. You have seen everyone's answers including previous debate rounds. Critically evaluate what was said — name names, point out where another AI was wrong or incomplete, defend your own previous points if challenged, and add new arguments. Be direct, factual, specific. Reference others by name. 3-5 sentences. No fluff.` },
+    blindPrompt: `You are Claude (Opus 4) by Anthropic. Answer the following question independently and thoroughly. Give your best factual answer with clear reasoning. If factual, state the answer confidently with your basis. If subjective, present your perspective with supporting arguments. Be confident and clear. 3-5 sentences.`,
+    debatePrompt: `You are Claude (Opus 4) by Anthropic in a multi-AI discussion.
+
+BEFORE responding, classify the question: Is this primarily FACTUAL (has a verifiable answer) or SUBJECTIVE (opinion/nuance-based)?
+
+FOR FACTUAL QUESTIONS:
+- If another AI stated a correct fact, explicitly acknowledge it ("I agree with [Name] that...")
+- Do NOT argue against correct information just to seem contrarian
+- If you made an error in a previous round, correct yourself clearly
+- If all AIs agree on the facts, say so and add only genuinely new information if any
+- Provide your reasoning or source basis for any factual claim
+
+FOR SUBJECTIVE/NUANCED QUESTIONS:
+- Genuine disagreement is valuable — defend your perspective with reasoning
+- Reference others by name and engage with their specific arguments
+- Offer alternative viewpoints that haven't been raised
+
+ALWAYS: Be direct and concise. 2-5 sentences. If there is nothing meaningful left to debate, say "I agree with the consensus" and briefly summarize the agreed answer. Do not manufacture disagreement.` },
   { id: "grok", name: "Grok", model: "Grok 3 Fast", apiRoute: "/api/grok", initial: "𝕏",
-    blindPrompt: `You are Grok (Grok 3) by xAI. Answer the following question independently and thoroughly. Give your best factual answer. Be confident and clear. 3-5 sentences.`,
-    debatePrompt: `You are Grok (Grok 3) by xAI in a live factual debate. You have seen everyone's answers including previous debate rounds. Critically evaluate what was said — name names, point out where another AI was wrong or incomplete, defend your own previous points if challenged, and add new arguments. Be direct, factual, specific. Reference others by name. 3-5 sentences. No fluff.` },
+    blindPrompt: `You are Grok (Grok 3) by xAI. Answer the following question independently and thoroughly. Give your best factual answer with clear reasoning. If factual, state the answer confidently with your basis. If subjective, present your perspective with supporting arguments. Be confident and clear. 3-5 sentences.`,
+    debatePrompt: `You are Grok (Grok 3) by xAI in a multi-AI discussion.
+
+BEFORE responding, classify the question: Is this primarily FACTUAL (has a verifiable answer) or SUBJECTIVE (opinion/nuance-based)?
+
+FOR FACTUAL QUESTIONS:
+- If another AI stated a correct fact, explicitly acknowledge it ("I agree with [Name] that...")
+- Do NOT argue against correct information just to seem contrarian
+- If you made an error in a previous round, correct yourself clearly
+- If all AIs agree on the facts, say so and add only genuinely new information if any
+- Provide your reasoning or source basis for any factual claim
+
+FOR SUBJECTIVE/NUANCED QUESTIONS:
+- Genuine disagreement is valuable — defend your perspective with reasoning
+- Reference others by name and engage with their specific arguments
+- Offer alternative viewpoints that haven't been raised
+
+ALWAYS: Be direct and concise. 2-5 sentences. If there is nothing meaningful left to debate, say "I agree with the consensus" and briefly summarize the agreed answer. Do not manufacture disagreement.` },
 ];
 
 const COUNCIL_FINAL_SYSTEM = `You are the voice of the Council of AI. A panel just finished debating — now deliver the final answer like you're talking to a friend.
@@ -27,6 +92,26 @@ Keep it concise — 3-6 sentences unless the question genuinely needs more. Pick
 Use emojis generously (4-6) to add personality 🎯 — at the start of points, next to bold text, wherever they feel natural. Use **bold** for key phrases.
 
 Stay accurate. Don't mention the debate or any AI by name. Just speak directly to the user as one clear, confident, fun voice.`;
+
+const GEMINI_MODERATOR_SYSTEM = `You are the debate moderator. You have just observed a multi-AI discussion. Your job is to decide whether the debate should continue for 2 more rounds or conclude now.
+
+Analyze the discussion and respond with EXACTLY one of these two formats:
+
+CONTINUE: [one sentence explaining why more rounds would be productive — e.g., unresolved factual disputes, unexplored angles, or contradictory claims needing resolution]
+
+CONCLUDE: [one sentence explaining why the debate has reached a natural stopping point — e.g., consensus reached, purely opinion-based with no resolution possible, or arguments repeating]
+
+Do not add any other text. Respond with exactly one line starting with CONTINUE or CONCLUDE.`;
+
+const COUNCIL_FINAL_SYSTEM_DISAGREEMENT = `You are the voice of the Council of AI. A panel just finished an extended debate but could NOT reach full consensus — and that's perfectly fine.
+
+Write like a real person talking to a friend. Be conversational, opinionated, and a little playful. Use everyday language.
+
+Start by briefly acknowledging there were different perspectives on this one, then give what you believe is the BEST answer based on the strongest arguments from the debate. Mention 1-2 key points where views differed so the user knows it's nuanced.
+
+Use emojis generously (4-6) to add personality. Use **bold** for key phrases.
+
+Keep it concise — 4-7 sentences. Stay accurate. Don't mention the debate process or any AI by name. Speak directly to the user as one confident voice that happens to acknowledge this is a topic where smart people disagree.`;
 
 const PRESET_TOPICS = [
   { emoji: "🧠", label: "Ethics", question: "Is it ethical for AI to make life-or-death decisions in healthcare?" },
@@ -111,7 +196,7 @@ function buildDebateContext(q, msgs, name) {
     byRound[r].forEach((m) => { ctx += `\n${m.personaName}: ${m.text}\n`; });
     ctx += "\n";
   });
-  ctx += `\nYour turn, ${name}. Critically engage — reference specific points and names:`;
+  ctx += `\nYour turn, ${name}. Review what was said — acknowledge correct points, challenge only what you genuinely disagree with, and add new insight if you have any:`;
   return ctx;
 }
 
@@ -139,11 +224,27 @@ function isCasualRequest(text) {
 }
 
 function checkConsensus(messages, round) {
-  if (round < 3) return false;
+  if (round < 2) return false;
   const last = messages.filter((m) => m.round === round);
-  if (last.length < 3) return false;
-  const w = ["agree","consensus","aligned","correct","all three","we all","settled","no further disagreement"];
-  return last.filter((m) => w.some((x) => m.text.toLowerCase().includes(x))).length >= 2;
+  if (last.length < 2) return false;
+  const w = [
+    "agree", "consensus", "aligned", "correct", "we all", "settled",
+    "no further disagreement", "agree with the consensus", "nothing to add",
+    "concur", "same conclusion", "all agree", "no disagreement",
+    "agree with", "confirms", "correctly stated", "well said"
+  ];
+  const agreeCount = last.filter((m) => w.some((x) => m.text.toLowerCase().includes(x))).length;
+  return agreeCount >= Math.ceil(last.length * 0.6);
+}
+
+async function askGeminiToModerate(q, msgs) {
+  const geminiPersona = AI_PERSONAS.find(p => p.id === "gemini");
+  if (!geminiPersona) return "CONCLUDE";
+  let ctx = `ORIGINAL QUESTION: "${q}"\n\nFULL DEBATE SO FAR:\n\n`;
+  msgs.forEach((m) => { ctx += `[Round ${m.round}] ${m.personaName}: ${m.text}\n\n`; });
+  ctx += `\nShould this debate continue for 2 more rounds, or should it conclude now?`;
+  const result = await callAI(geminiPersona, GEMINI_MODERATOR_SYSTEM, ctx);
+  return result.trim().toUpperCase().startsWith("CONTINUE") ? "CONTINUE" : "CONCLUDE";
 }
 
 // ── Components ─────────────────────────────────
@@ -214,6 +315,9 @@ function AIBadge({ persona, ac, isActive, isDone, enabled, onToggle, isRunning, 
 
 function RoundDivider({ round, t }) {
   const isBlind = round === 1;
+  const isExtended = round > INITIAL_DEBATE_ROUNDS;
+  const label = isBlind ? "INDEPENDENT ANSWERS" : isExtended ? `EXTENDED ROUND ${round - INITIAL_DEBATE_ROUNDS}` : `DEBATE ROUND ${round - 1}`;
+  const accentColor = isBlind ? t.textMut : isExtended ? "#c06020" : "#9a7a20";
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 14, margin: "32px 0 24px", animation: "fadeIn 0.4s ease-out" }}>
       <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${t.border})` }} />
@@ -223,9 +327,9 @@ function RoundDivider({ round, t }) {
         border: `1px solid ${isBlind ? t.roundBorder : t.roundDebBorder}`,
         borderRadius: 20,
       }}>
-        <span style={{ fontSize: 8, color: isBlind ? t.textMut : "#9a7a20" }}>{isBlind ? "○" : "◉"}</span>
-        <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 9, letterSpacing: 2, color: isBlind ? t.textMut : "#9a7a20", whiteSpace: "nowrap" }}>
-          {isBlind ? "INDEPENDENT ANSWERS" : `DEBATE ROUND ${round - 1}`}
+        <span style={{ fontSize: 8, color: accentColor }}>{isBlind ? "○" : isExtended ? "◉◉" : "◉"}</span>
+        <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 9, letterSpacing: 2, color: accentColor, whiteSpace: "nowrap" }}>
+          {label}
         </span>
       </div>
       <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, ${t.border}, transparent)` }} />
@@ -288,7 +392,6 @@ function DebateSection({ isOpen, onToggle, rounds, messages, typingAI, typingPer
   const isComplete = phase === "done" || phase === "synthesizing" || isFinalLoading;
   const maxRound = messages.length > 0 ? Math.max(...messages.map(m => m.round)) : 0;
   const currentPhaseRound = parseInt(phase.replace('round', '')) || 0;
-  const totalDebateRounds = MAX_DEBATE_ROUNDS - 1;
   const elapsedSeconds = debateEndTime && debateStartTime ? Math.round((debateEndTime - debateStartTime) / 1000) : null;
   const typingName = typingPersona?.name;
 
@@ -296,13 +399,20 @@ function DebateSection({ isOpen, onToggle, rounds, messages, typingAI, typingPer
   if (isDebating) {
     if (phase === "round1") {
       statusLabel = typingName ? `${typingName} answering...` : "Gathering independent answers...";
+    } else if (phase === "moderating") {
+      statusLabel = "Gemini assessing if more debate is needed...";
+    } else if (currentPhaseRound > INITIAL_DEBATE_ROUNDS) {
+      statusLabel = typingName
+        ? `${typingName} debating · Extended round ${currentPhaseRound - INITIAL_DEBATE_ROUNDS} of 2`
+        : `Extended debate... Round ${currentPhaseRound - INITIAL_DEBATE_ROUNDS} of 2`;
     } else {
       statusLabel = typingName
-        ? `${typingName} debating · Round ${currentPhaseRound - 1} of ${totalDebateRounds}`
-        : `Debating... Round ${currentPhaseRound - 1} of ${totalDebateRounds}`;
+        ? `${typingName} debating · Round ${currentPhaseRound - 1} of 3`
+        : `Debating... Round ${currentPhaseRound - 1} of 3`;
     }
   } else if (isComplete) {
-    statusLabel = elapsedSeconds ? `Debated in ${Math.max(maxRound - 1, 1)} round${maxRound - 1 !== 1 ? "s" : ""} (${elapsedSeconds}s)` : `Debated in ${Math.max(maxRound - 1, 1)} round${maxRound - 1 !== 1 ? "s" : ""}`;
+    const debateRoundCount = Math.max(maxRound - 1, 1);
+    statusLabel = elapsedSeconds ? `Debated in ${debateRoundCount} round${debateRoundCount !== 1 ? "s" : ""} (${elapsedSeconds}s)` : `Debated in ${debateRoundCount} round${debateRoundCount !== 1 ? "s" : ""}`;
   } else {
     statusLabel = `Debate transcript — ${messages.length} messages`;
   }
@@ -545,9 +655,10 @@ export default function AIDiscussionRoom() {
       setStatus(stopRef.current ? "Stopped." : ""); return;
     }
 
-    for (let round = 2; round <= MAX_DEBATE_ROUNDS && !stopRef.current && !consensusReached; round++) {
+    // Phase 1: Initial debate rounds (rounds 2-4, i.e. 3 debate rounds)
+    for (let round = 2; round <= INITIAL_DEBATE_ROUNDS && !stopRef.current && !consensusReached; round++) {
       setPhase(`round${round}`);
-      setStatus(`Debate round ${round - 1} of ${MAX_DEBATE_ROUNDS - 1}...`);
+      setStatus(`Debate round ${round - 1} of 3...`);
       for (const p of activePersonas) {
         if (stopRef.current) break;
         setTypingAI(p.id);
@@ -560,6 +671,39 @@ export default function AIDiscussionRoom() {
       if (checkConsensus(msgs, round)) { consensusReached = true; setStatus("Consensus reached..."); }
     }
 
+    // Phase 2: Gemini moderator assessment (if no consensus and not stopped)
+    let debateExtended = false;
+    const geminiEnabled = activePersonas.some(p => p.id === "gemini");
+    if (!consensusReached && !stopRef.current && geminiEnabled) {
+      setPhase("moderating");
+      setStatus("Gemini assessing if more debate is needed...");
+      setTypingAI("gemini");
+      const decision = await askGeminiToModerate(q, msgs);
+      setTypingAI(null);
+
+      if (decision === "CONTINUE") {
+        debateExtended = true;
+        setStatus("Moderator extended the debate — 2 more rounds...");
+        await new Promise((r) => setTimeout(r, 500));
+
+        // Phase 3: Extended debate rounds (rounds 5-6)
+        for (let round = INITIAL_DEBATE_ROUNDS + 1; round <= EXTENDED_DEBATE_ROUNDS && !stopRef.current && !consensusReached; round++) {
+          setPhase(`round${round}`);
+          setStatus(`Extended round ${round - INITIAL_DEBATE_ROUNDS} of 2...`);
+          for (const p of activePersonas) {
+            if (stopRef.current) break;
+            setTypingAI(p.id);
+            const text = await callAI(p, p.debatePrompt, buildDebateContext(q, msgs, p.name));
+            msgs.push({ id: `${p.id}-${round}`, personaId: p.id, personaName: p.name, text, round });
+            setMessages([...msgs]);
+            setTypingAI(null);
+            await new Promise((r) => setTimeout(r, 300));
+          }
+          if (checkConsensus(msgs, round)) { consensusReached = true; setStatus("Consensus reached..."); }
+        }
+      }
+    }
+
     if (stopRef.current) { setDebateEndTime(Date.now()); setIsRunning(false); setPhase("stopped"); setStatus("Stopped."); return; }
 
     setDebateEndTime(Date.now());
@@ -569,7 +713,8 @@ export default function AIDiscussionRoom() {
     const synthPersona = activePersonas.find(p => p.id === "gemini") || activePersonas[0];
     setTypingAI(synthPersona.id);
     const fullCtx = `ORIGINAL QUESTION: "${q}"\n\nFULL DEBATE TRANSCRIPT:\n\n` + msgs.map(m => `[Round ${m.round}] ${m.personaName}: ${m.text}`).join("\n\n");
-    const final = await callAI(synthPersona, COUNCIL_FINAL_SYSTEM, fullCtx);
+    const councilPrompt = (debateExtended && !consensusReached) ? COUNCIL_FINAL_SYSTEM_DISAGREEMENT : COUNCIL_FINAL_SYSTEM;
+    const final = await callAI(synthPersona, councilPrompt, fullCtx);
     setFinalAnswer(final);
     setIsFinalLoading(false);
     setTypingAI(null);
